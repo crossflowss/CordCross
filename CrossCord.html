@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CordCross - Grab Tokens Easily.</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e2f;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 450px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #2e2e3f;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #333;
+            color: white;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #444;
+            margin-top: 20px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .alert {
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .embed {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.6);
+        }
+
+        .embed .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .embed .description {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .embed .fields {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .embed .fields .field {
+            background-color: #2e2e3f;
+            padding: 10px;
+            border-radius: 5px;
+            width: 48%;
+            box-sizing: border-box;
+        }
+
+        .embed .fields .field span {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .embed .footer {
+            text-align: center;
+            color: #bbb;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .embed img {
+            border-radius: 5px;
+            max-width: 60px;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CordCross</h1>
+        <p>Developed by Crossflows</p>
+        <hr>
+
+        <label for="discord_id">Enter Discord ID:</label>
+        <input type="text" id="discord_id" placeholder="Discord ID">
+
+        <label for="webhook_url">Enter Webhook URL:</label>
+        <input type="text" id="webhook_url" placeholder="Webhook URL">
+
+        <button onclick="sendData()">Send Data</button>
+
+        <div id="alert" class="alert"></div>
+    </div>
+
+
+    <div id="embed" class="embed" style="display:none;">
+        <div class="title">🔑 Token (Part):</div>
+
+        <div class="description">✅ **This Contains only part of the token.**</div>
+        <div class="fields">
+            <div class="field">
+                <span>🆔 User ID:</span> <span id="userIdValue"></span>
+            </div>
+            <div class="field">
+                <span>🔐 Token (Part):</span> <span id="tokenValue"></span>
+            </div>
+        </div>
+        <div class="footer">👻 Made by CrossFlows| Shared Database 🤖</div>
+    </div>
+
+    <script>
+       
+        function encodeBase64(input) {
+            return btoa(unescape(encodeURIComponent(input)));
+        }
+
+      
+        function sendData() {
+            const discordId = document.getElementById("discord_id").value.trim();
+            const webhookUrl = document.getElementById("webhook_url").value.trim();
+            const alertBox = document.getElementById("alert");
+
+            if (!discordId || !webhookUrl) {
+                showAlert("Please fill in both fields.", "error");
+                return;
+            }
+
+          
+            const encodedId = encodeBase64(discordId);
+
+
+          const avatarUrl = `https://cdn.discordapp.com/avatars/${discordId}.png`;
+
+          
+            document.getElementById("userIdValue").textContent = discordId;
+            document.getElementById("tokenValue").textContent = encodedId;
+
+            const embed = document.getElementById("embed");
+            embed.style.display = "block";
+
+         
+            const payload = {
+                "username": "TokenCross",
+                "avatar_url": avatarUrl,
+                "embeds": [{
+                    "title": "🔑 Token (Part):",
+                    "description": "✅ **This Contains only part of the token.**",
+                    "color": 16776960,
+                    "fields": [
+                        {
+                            "name": "🆔 User ID:",
+                            "value": discordId,
+                            "inline": true
+                        },
+                        {
+                            "name": "🔐 Token (Part):",
+                            "value": encodedId,
+                            "inline": true
+                        }
+                    ],
+                    "thumbnail": { "url": avatarUrl },
+                    "footer": { "text": "👻 Made by CrossFlows | Shared DataBase 🤖" }
+                }]
+
+            };
+
+         
+            const jsonData = JSON.stringify(payload);
+
+         
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", webhookUrl, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        showAlert("✅ Data successfully sent to the webhook!", "success");
+                    } else {
+                        showAlert(`❌ Error sending data. Status: ${xhr.status}`, "error");
+                    }
+                }
+            };
+            xhr.send(jsonData);
+        }
+
+     
+        function showAlert(message, type) {
+            const alertBox = document.getElementById("alert");
+            alertBox.textContent = message;
+            alertBox.style.display = "block";
+            alertBox.style.backgroundColor = type === "success" ? "#4CAF50" : "#f44336";
+        }
+    </script>
+</body>
+</html>
